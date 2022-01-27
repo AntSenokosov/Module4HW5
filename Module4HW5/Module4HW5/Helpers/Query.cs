@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Module4HW5.Entities;
 
 namespace Module4HW5.Helpers;
 
@@ -28,6 +29,23 @@ public class Query
 
         var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == 3);
         project.ClientId = 2;
+
+        await _context.SaveChangesAsync();
+    }
+
+    // Запрос, который добавляет сущность Employee с Title и Project
+    public async Task AddEntityEmployee()
+    {
+        var employee = new Employee()
+        {
+            FirstName = "Firstname",
+            LastName = "Lastname",
+            HiredDate = new DateTime(2021, 6, 29),
+            OfficeId = 2,
+            TitleId = 4
+        };
+
+        await _context.AddAsync(employee);
 
         await _context.SaveChangesAsync();
     }
