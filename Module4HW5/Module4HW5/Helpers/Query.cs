@@ -58,4 +58,25 @@ public class Query
 
         await _context.SaveChangesAsync();
     }
+
+    // Запрос, который группирует сотрудников по ролям и возвращает название роли (Title) если оно не содержит ‘a’
+    public async Task GroupEmployee()
+    {
+        var data = await _context.Employees
+            .AsNoTracking()
+            .Include(e => e.Title)
+            .GroupBy(t => t.Title.Name)
+            .Select(g => new
+            {
+                Name = g.Key,
+                Count = g.Count()
+            })
+            .Where(g => !g.Name.Contains("a"))
+            .ToListAsync();
+
+        foreach (var item in data)
+        {
+            Console.WriteLine($"{item.Name}, {item.Count}");
+        }
+    }
 }
