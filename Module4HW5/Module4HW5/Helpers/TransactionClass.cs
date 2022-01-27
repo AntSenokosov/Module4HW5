@@ -1,8 +1,8 @@
 ﻿namespace Module4HW5.Helpers;
 
-public class TransactionClass
+public static class TransactionClass
 {
-    public async Task Transaction(Func<Task> func, string[] args)
+    public static async Task Transaction(Func<Task> func, string[] args)
     {
         await using (var transaction =
                      await new SampleContextFactory().CreateDbContext(args).Database.BeginTransactionAsync())

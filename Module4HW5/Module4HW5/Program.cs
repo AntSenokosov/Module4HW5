@@ -6,7 +6,9 @@ using Module4HW5;
 
 public class Program
 {
-    public static void Main(string[] args)
+    public static async Task Main(string[] args)
     {
+        var app = new App();
+        await app.Run(args);
     }
 }
