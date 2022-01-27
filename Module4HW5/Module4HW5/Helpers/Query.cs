@@ -17,7 +17,7 @@ public class Query
     {
         var data = await _context.Employees
             .Include(e => e.Office)
-            .ThenInclude(e => e.Title)
+            .Include(e => e.Title)
             .ToListAsync();
 
         return data;
@@ -105,7 +105,7 @@ public class Query
             .Where(g => !g.Name.Contains("a"))
             .ToListAsync();
 
-        var result = data.Select(e => (e.Name + e.Count).ToString());
+        var result = data.Select(e => $"{e.Name} {e.Count}".ToString());
 
         return result.ToList();
     }

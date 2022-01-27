@@ -9,12 +9,36 @@ public class App
         await using (var context = new SampleContextFactory().CreateDbContext(args))
         {
             var query = new Query(context);
-            await TransactionClass.Transaction(() => query.JoinTables(), args);
-            await TransactionClass.Transaction(() => query.DateDiffQuery(), args);
-            await TransactionClass.Transaction(() => query.UpdateEntities(), args);
-            await TransactionClass.Transaction(() => query.AddEntityEmployee(), args);
-            await TransactionClass.Transaction(() => query.DeleteEntityEmployee(), args);
-            await TransactionClass.Transaction(() => query.GroupEmployee(), args);
+            var transaction = new TransactionClass();
+            Console.WriteLine("Запрос, который объединяет 3 таблицы и обязательно включает LEFT JOIN");
+            var query1 = await transaction.Transaction(() => query.JoinTables(), args);
+            foreach (var item in query1)
+            {
+                Console.WriteLine($"{item.FirstName} {item.LastName} {item.HiredDate} {item.Office.Title} {item.Title.Name}");
+            }
+
+            Console.WriteLine("Запрос, который возвращает разницу между CreatedDate/HiredDate и сегодня. Фильтрация должна быть выполнена на сервере.");
+            var query2 = await transaction.Transaction(() => query.DateDiffQuery(), args);
+            foreach (var item in query2)
+            {
+                Console.WriteLine(item);
+            }
+
+            Console.WriteLine("Запрос, который обновляет 2 сущности. Сделать в одной  транзакции");
+            await transaction.Transaction(() => query.UpdateEntities(), args);
+
+            Console.WriteLine("Запрос, который добавляет сущность Employee с Title и Project");
+            await transaction.TransactionVoid(() => query.AddEntityEmployee(), args);
+
+            Console.WriteLine("Запрос, который удаляет сущность Employee");
+            await transaction.Transaction(() => query.DeleteEntityEmployee(), args);
+
+            Console.WriteLine("Запрос, который группирует сотрудников по ролям и возвращает название роли (Title) если оно не содержит ‘a’");
+            var query6 = await transaction.Transaction(() => query.GroupEmployee(), args);
+            foreach (var item in query6)
+            {
+                Console.WriteLine(item);
+            }
         }
     }
 }
