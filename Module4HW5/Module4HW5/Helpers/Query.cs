@@ -49,4 +49,13 @@ public class Query
 
         await _context.SaveChangesAsync();
     }
+
+    // Запрос, который удаляет сущность Employee
+    public async Task DeleteEntityEmployee()
+    {
+        var employee = await _context.Employees.FirstOrDefaultAsync(e => e.Id == 8);
+        _context.Employees.Remove(employee);
+
+        await _context.SaveChangesAsync();
+    }
 }
