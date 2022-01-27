@@ -11,14 +11,14 @@ public class App
             var query = new Query(context);
             var transaction = new TransactionClass();
             Console.WriteLine("Запрос, который объединяет 3 таблицы и обязательно включает LEFT JOIN");
-            var query1 = await transaction.Transaction(() => query.JoinTables(), args);
+            var query1 = await query.JoinTables();
             foreach (var item in query1)
             {
                 Console.WriteLine($"{item.FirstName} {item.LastName} {item.HiredDate} {item.Office.Title} {item.Title.Name}");
             }
 
             Console.WriteLine("Запрос, который возвращает разницу между CreatedDate/HiredDate и сегодня. Фильтрация должна быть выполнена на сервере.");
-            var query2 = await transaction.Transaction(() => query.DateDiffQuery(), args);
+            var query2 = await query.DateDiffQuery();
             foreach (var item in query2)
             {
                 Console.WriteLine(item);
@@ -34,7 +34,7 @@ public class App
             await transaction.Transaction(() => query.DeleteEntityEmployee(), args);
 
             Console.WriteLine("Запрос, который группирует сотрудников по ролям и возвращает название роли (Title) если оно не содержит ‘a’");
-            var query6 = await transaction.Transaction(() => query.GroupEmployee(), args);
+            var query6 = await query.GroupEmployee();
             foreach (var item in query6)
             {
                 Console.WriteLine(item);
