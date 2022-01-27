@@ -19,4 +19,16 @@ public class Query
             .Select(s => s.HiredDate)
             .ToListAsync();
     }
+
+    // Запрос, который обновляет 2 сущности. Сделать в одной  транзакции
+    public async Task UpdateEntities()
+    {
+        var title = await _context.Titles.FirstOrDefaultAsync(t => t.Id == 2);
+        title.Name = title.Name + Guid.NewGuid();
+
+        var project = await _context.Projects.FirstOrDefaultAsync(p => p.Id == 3);
+        project.ClientId = 2;
+
+        await _context.SaveChangesAsync();
+    }
 }
